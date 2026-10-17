@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "build:css": "tailwindcss -i ./src/style.css -o ./public/css/style.css --minify"
+    "build:css": "tailwindcss -i ./src/style.css -o ./css/style.css --minify"
   },
   "keywords": [],
   "author": "",

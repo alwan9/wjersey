@@ -76,10 +76,7 @@
       transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s ease;
     }
 
-    .glass-card-fixed {
-      width: 240px;
-      height: 360px;
-    }
+
 
     .glass-card::before {
       content: '';
@@ -123,27 +120,7 @@
         inset 0 0 28px 14px rgba(255, 255, 255, 1.5);
     }
 
-    /* Marquee Infinite Auto-Scroll for Testimonials */
-    @keyframes marqueeScroll {
-      0% {
-        transform: translateX(0%);
-      }
 
-      100% {
-        transform: translateX(-50%);
-      }
-    }
-
-    .animate-marquee {
-      display: flex;
-      width: max-content;
-      animation: marqueeScroll 32s linear infinite;
-      will-change: transform;
-    }
-
-    .animate-marquee:hover {
-      animation-play-state: paused;
-    }
 
     /* Glass Panels (Navbar, Hero Container, Spotlight, Large Cards) */
     .glass-panel {

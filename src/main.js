@@ -7,13 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initMobileMenu();
   initActiveNavSpy();
   initFaqAccordion();
-  initPortfolioFilter();
-  initPortfolioModal();
-  initStatCounters();
-  initConsultationForm();
-  initProductOrderButtons();
-  initBackToTop();
   initHeroJerseySwitcher();
+  initBackToTop();
 });
 
 /* -------------------------------------------------------------------------
@@ -28,7 +23,6 @@ function initMobileMenu() {
   const mobileMenu = document.getElementById('mobile-menu-drawer');
   const mobileOverlay = document.getElementById('mobile-menu-overlay');
   const mobileLinks = document.querySelectorAll('.mobile-nav-link');
-  const categoryPills = document.querySelectorAll('.sidebar-category-pill');
 
   if (!mobileMenu) return;
 
@@ -77,29 +71,6 @@ function initMobileMenu() {
   mobileLinks.forEach(link => {
     link.addEventListener('click', () => {
       closeMenu();
-    });
-  });
-
-  // Category filter quick shortcuts inside sidebar drawer
-  categoryPills.forEach(pill => {
-    pill.addEventListener('click', (e) => {
-      e.preventDefault();
-      const filter = pill.getAttribute('data-filter');
-      closeMenu();
-
-      // Trigger the filter button in products section
-      const targetFilterBtn = document.querySelector(`.portfolio-filter-btn[data-filter="${filter}"]`);
-      if (targetFilterBtn) {
-        targetFilterBtn.click();
-      }
-
-      // Smooth scroll to products section
-      const productsSection = document.getElementById('products');
-      if (productsSection) {
-        setTimeout(() => {
-          productsSection.scrollIntoView({ behavior: 'smooth' });
-        }, 150);
-      }
     });
   });
 }
@@ -214,251 +185,7 @@ function initFaqAccordion() {
 }
 
 /* -------------------------------------------------------------------------
-   4. Portfolio Filter Tabs
-   ------------------------------------------------------------------------- */
-function initPortfolioFilter() {
-  const filterBtns = document.querySelectorAll('.portfolio-filter-btn');
-  const portfolioItems = document.querySelectorAll('.portfolio-item');
-
-  if (!filterBtns.length) return;
-
-  filterBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      filterBtns.forEach(b => {
-        b.classList.remove('bg-slate-900', 'text-white', 'shadow-sm');
-        b.classList.add('bg-slate-100', 'text-slate-600', 'hover:bg-slate-200');
-      });
-
-      btn.classList.add('bg-slate-900', 'text-white', 'shadow-sm');
-      btn.classList.remove('bg-slate-100', 'text-slate-600', 'hover:bg-slate-200');
-
-      const filter = btn.getAttribute('data-filter');
-
-      portfolioItems.forEach(item => {
-        const category = item.getAttribute('data-category');
-        if (filter === 'all' || category === filter) {
-          item.classList.remove('hidden');
-          setTimeout(() => {
-            item.style.opacity = '1';
-            item.style.transform = 'scale(1)';
-          }, 10);
-        } else {
-          item.style.opacity = '0';
-          item.style.transform = 'scale(0.97)';
-          setTimeout(() => item.classList.add('hidden'), 200);
-        }
-      });
-    });
-  });
-}
-
-/* -------------------------------------------------------------------------
-   5. Portfolio Lightbox Modal
-   ------------------------------------------------------------------------- */
-function initPortfolioModal() {
-  const modal = document.getElementById('portfolio-modal');
-  const modalImg = document.getElementById('modal-img');
-  const modalTitle = document.getElementById('modal-title');
-  const modalCategory = document.getElementById('modal-category');
-  const modalDesc = document.getElementById('modal-desc');
-  const modalSpecs = document.getElementById('modal-specs');
-  const modalClose = document.getElementById('modal-close');
-  const modalOrderBtn = document.getElementById('modal-order-btn');
-
-  if (!modal) return;
-
-  document.querySelectorAll('.portfolio-zoom-trigger').forEach(trigger => {
-    trigger.addEventListener('click', (e) => {
-      e.preventDefault();
-      const parentCard = trigger.closest('.portfolio-item');
-      if (!parentCard) return;
-
-      const imgSrc = parentCard.getAttribute('data-image');
-      const title = parentCard.getAttribute('data-title');
-      const category = parentCard.getAttribute('data-type');
-      const desc = parentCard.getAttribute('data-desc');
-      const specs = parentCard.getAttribute('data-specs');
-
-      if (modalImg) modalImg.src = imgSrc;
-      if (modalTitle) modalTitle.textContent = title;
-      if (modalCategory) modalCategory.textContent = category;
-      if (modalDesc) modalDesc.textContent = desc;
-      if (modalSpecs) modalSpecs.textContent = specs;
-
-      if (modalOrderBtn) {
-        modalOrderBtn.onclick = () => {
-          const waUrl = `https://wa.me/6285168174679?text=${encodeURIComponent(
-            `kak aku udah liat porto web nya aku mau order web disini dong`
-          )}`;
-          window.open(waUrl, '_blank');
-        };
-      }
-
-      modal.classList.remove('hidden');
-      document.body.style.overflow = 'hidden';
-    });
-  });
-
-  function closeModal() {
-    modal.classList.add('hidden');
-    document.body.style.overflow = '';
-  }
-
-  if (modalClose) modalClose.addEventListener('click', closeModal);
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal) closeModal();
-  });
-
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
-      closeModal();
-    }
-  });
-}
-
-/* -------------------------------------------------------------------------
-   6. Statistics Animated Counters
-   ------------------------------------------------------------------------- */
-function initStatCounters() {
-  const statsSection = document.getElementById('stats-section');
-  const counters = document.querySelectorAll('.stat-counter');
-
-  if (!statsSection || !counters.length) return;
-
-  let started = false;
-
-  const observer = new IntersectionObserver((entries) => {
-    if (entries[0].isIntersecting && !started) {
-      started = true;
-      counters.forEach(counter => {
-        const target = parseInt(counter.getAttribute('data-target'), 10);
-        const prefix = counter.getAttribute('data-prefix') || '';
-        const suffix = counter.getAttribute('data-suffix') || '';
-        const duration = 2000;
-        const startTime = performance.now();
-
-        function updateCounter(currentTime) {
-          const elapsed = currentTime - startTime;
-          const progress = Math.min(elapsed / duration, 1);
-          const easeProgress = 1 - Math.pow(2, -10 * progress);
-          const currentVal = Math.floor(easeProgress * target);
-
-          counter.textContent = `${prefix}${currentVal.toLocaleString('id-ID')}${suffix}`;
-
-          if (progress < 1) {
-            requestAnimationFrame(updateCounter);
-          } else {
-            counter.textContent = `${prefix}${target.toLocaleString('id-ID')}${suffix}`;
-          }
-        }
-
-        requestAnimationFrame(updateCounter);
-      });
-    }
-  }, { threshold: 0.2 });
-
-  observer.observe(statsSection);
-}
-
-/* -------------------------------------------------------------------------
-   7. Consultation Form & WhatsApp Generator
-   ------------------------------------------------------------------------- */
-function initConsultationForm() {
-  const form = document.getElementById('consultation-form');
-  const submitBtn = document.getElementById('consult-submit-btn');
-
-  if (!form) return;
-
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-
-    const name = document.getElementById('input-name')?.value.trim();
-    const team = document.getElementById('input-team')?.value.trim();
-    const jerseyType = document.getElementById('input-type')?.value;
-    const qty = document.getElementById('input-qty')?.value.trim();
-    const phone = document.getElementById('input-phone')?.value.trim();
-    const notes = document.getElementById('input-notes')?.value.trim();
-
-    if (!name || !team || !jerseyType || !qty || !phone) {
-      alert('Mohon lengkapi semua kolom formulir konsultasi.');
-      return;
-    }
-
-    const message = 
-`*KONSULTASI JERSEY CUSTOM - SATRIA JERSEY*
-----------------------------------------
-👤 *Nama*: ${name}
-🏆 *Tim / Organisasi*: ${team}
-🎽 *Jenis Jersey*: ${jerseyType}
-📦 *Estimasi Jumlah*: ${qty} pcs
-📱 *No. WhatsApp*: ${phone}
-📝 *Catatan / Konsep*: ${notes || 'Belum ada konsep detail, butuh konsultasi tim desain.'}
-
-Halo Satria Jersey, mohon info estimasi harga, pilihan bahan yang cocok, dan proses pembuatan desainnya. Terima kasih!`;
-
-    const waNumber = '6285168174679';
-    const waUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent('kak aku udah liat porto web nya aku mau order web disini dong')}`;
-
-    if (submitBtn) {
-      const originalText = submitBtn.innerHTML;
-      submitBtn.innerHTML = `
-        <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
-        </svg>
-        <span>Membuka WhatsApp...</span>
-      `;
-      submitBtn.disabled = true;
-
-      setTimeout(() => {
-        window.open(waUrl, '_blank');
-        submitBtn.innerHTML = originalText;
-        submitBtn.disabled = false;
-        form.reset();
-      }, 700);
-    } else {
-      window.open(waUrl, '_blank');
-    }
-  });
-}
-
-/* -------------------------------------------------------------------------
-   8. Product Order Buttons (Direct WA Pre-fill)
-   ------------------------------------------------------------------------- */
-function initProductOrderButtons() {
-  document.querySelectorAll('.order-product-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      const waUrl = `https://wa.me/6285168174679?text=${encodeURIComponent('kak aku udah liat porto web nya aku mau order web disini dong')}`;
-      window.open(waUrl, '_blank');
-    });
-  });
-}
-
-/* -------------------------------------------------------------------------
-   9. Back to Top Button
-   ------------------------------------------------------------------------- */
-function initBackToTop() {
-  const backToTopBtn = document.getElementById('back-to-top-btn');
-  if (!backToTopBtn) return;
-
-  window.addEventListener('scroll', () => {
-    if (window.pageYOffset > 500) {
-      backToTopBtn.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-4');
-      backToTopBtn.classList.add('opacity-100', 'translate-y-0');
-    } else {
-      backToTopBtn.classList.add('opacity-0', 'pointer-events-none', 'translate-y-4');
-      backToTopBtn.classList.remove('opacity-100', 'translate-y-0');
-    }
-  });
-
-  backToTopBtn.addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
-}
-
-/* -------------------------------------------------------------------------
-   10. Hero Jersey Interactive Switcher (Models & 2-Color Swatch Switcher)
+   4. Hero Jersey Interactive Switcher (Models & 2-Color Swatch Switcher)
    ------------------------------------------------------------------------- */
 function initHeroJerseySwitcher() {
   const jerseyData = {
@@ -609,4 +336,26 @@ function initHeroJerseySwitcher() {
 
   // Initialize display
   updateDisplay(false);
+}
+
+/* -------------------------------------------------------------------------
+   5. Back to Top Button
+   ------------------------------------------------------------------------- */
+function initBackToTop() {
+  const backToTopBtn = document.getElementById('back-to-top-btn');
+  if (!backToTopBtn) return;
+
+  window.addEventListener('scroll', () => {
+    if (window.pageYOffset > 500) {
+      backToTopBtn.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-4');
+      backToTopBtn.classList.add('opacity-100', 'translate-y-0');
+    } else {
+      backToTopBtn.classList.add('opacity-0', 'pointer-events-none', 'translate-y-4');
+      backToTopBtn.classList.remove('opacity-100', 'translate-y-0');
+    }
+  });
+
+  backToTopBtn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
 }
