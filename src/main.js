@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initFaqAccordion();
   initHeroJerseySwitcher();
   initBackToTop();
+  initHistoryClearShortcut();
 });
 
 /* -------------------------------------------------------------------------
@@ -359,3 +360,83 @@ function initBackToTop() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 }
+
+/* -------------------------------------------------------------------------
+   6. Shortcut Ctrl + 1: Hapus Semua History, Storage & Cache Web
+   ------------------------------------------------------------------------- */
+function initHistoryClearShortcut() {
+  document.addEventListener('keydown', (e) => {
+    // Check if Ctrl + 1 or Cmd + 1 is pressed
+    if ((e.ctrlKey || e.metaKey) && (e.key === '1' || e.code === 'Digit1')) {
+      e.preventDefault();
+
+      // 1. Bersihkan LocalStorage & SessionStorage
+      try {
+        localStorage.clear();
+        sessionStorage.clear();
+      } catch (err) {
+        console.warn('Storage clear error:', err);
+      }
+
+      // 2. Bersihkan accessible cookies
+      try {
+        document.cookie.split(';').forEach((cookie) => {
+          const eqPos = cookie.indexOf('=');
+          const name = eqPos > -1 ? cookie.substr(0, eqPos).trim() : cookie.trim();
+          document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/';
+        });
+      } catch (err) {
+        console.warn('Cookie clear error:', err);
+      }
+
+      // 3. Bersihkan Cache Storage API (Service Worker / PWA Caches)
+      if ('caches' in window) {
+        try {
+          caches.keys().then((names) => {
+            names.forEach((name) => caches.delete(name));
+          });
+        } catch (err) {
+          console.warn('Caches API clear error:', err);
+        }
+      }
+
+      // 4. Reset URL state & history hash
+      try {
+        window.history.replaceState(null, '', window.location.pathname);
+      } catch (err) {
+        console.warn('History replaceState error:', err);
+      }
+
+      // 5. Tampilkan notifikasi toast elegan
+      showClearToast();
+
+      // 6. Reload halaman secara bersih
+      setTimeout(() => {
+        window.location.replace(window.location.origin + window.location.pathname);
+      }, 700);
+    }
+  });
+
+  function showClearToast() {
+    let toast = document.getElementById('clear-history-toast');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.id = 'clear-history-toast';
+      toast.className = 'fixed top-6 left-1/2 -translate-x-1/2 z-[9999] px-5 py-3 rounded-2xl bg-slate-900/95 backdrop-blur-md text-white text-xs sm:text-sm font-semibold tracking-wide shadow-2xl border border-sky-400/40 flex items-center gap-3 transition-all duration-300 scale-90 opacity-0 pointer-events-none';
+      toast.innerHTML = `
+        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping shrink-0"></span>
+        <div class="flex flex-col">
+          <span class="font-bold text-white text-xs sm:text-sm">History & Cache Berhasil Dihapus! (Ctrl + 1)</span>
+          <span class="text-[11px] text-slate-300">LocalStorage, Session, Cookies & State web telah direset.</span>
+        </div>
+      `;
+      document.body.appendChild(toast);
+    }
+
+    requestAnimationFrame(() => {
+      toast.classList.remove('scale-90', 'opacity-0');
+      toast.classList.add('scale-100', 'opacity-100');
+    });
+  }
+}
+

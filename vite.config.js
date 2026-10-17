@@ -1,12 +1,14 @@
-import { defineConfig } from 'vite';
+const { defineConfig } = require('vite');
 
-export default defineConfig({
+module.exports = defineConfig({
   server: {
+    host: '127.0.0.1',
     port: 5500,
-    open: false,
-    host: true
+    strictPort: true,
   },
   preview: {
-    port: 5500
+    host: '127.0.0.1',
+    port: 5500,
+    strictPort: true,
   }
 });
