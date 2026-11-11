@@ -464,7 +464,7 @@ function initHistoryClearShortcut() {
       toast.id = 'clear-history-toast';
       toast.className = 'fixed top-6 left-1/2 -translate-x-1/2 z-[9999] px-5 py-3 rounded-2xl bg-slate-900/95 backdrop-blur-md text-white text-xs sm:text-sm font-semibold tracking-wide shadow-2xl border border-sky-400/40 flex items-center gap-3 transition-all duration-300 scale-90 opacity-0 pointer-events-none';
       toast.innerHTML = `
-        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 shrink-0"></span>
+        <span class="w-2.5 h-2.5 rounded-full bg-sky-400 shrink-0"></span>
         <div class="flex flex-col">
           <span class="font-bold text-white text-xs sm:text-sm">History & Cache Berhasil Dihapus! (Ctrl + 1)</span>
           <span class="text-[11px] text-slate-300">LocalStorage, Session, Cookies & State web telah direset.</span>
