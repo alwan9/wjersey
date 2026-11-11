@@ -230,6 +230,7 @@ function initHeroJerseySwitcher() {
     voltex: {
       name: "Voltex Pro Match Kit",
       price: "Rp119.000",
+      originalPrice: "Rp149.000",
       colors: [
         {
           id: "white",
@@ -250,6 +251,7 @@ function initHeroJerseySwitcher() {
     runner: {
       name: "Aeroflow X-Speed",
       price: "Rp129.000",
+      originalPrice: "Rp159.000",
       colors: [
         {
           id: "cyan",
@@ -270,6 +272,7 @@ function initHeroJerseySwitcher() {
     raijin: {
       name: "Raijin Cyber Streetwear",
       price: "Rp139.000",
+      originalPrice: "Rp169.000",
       colors: [
         {
           id: "crimson",
@@ -295,7 +298,7 @@ function initHeroJerseySwitcher() {
   const jerseyImg = document.getElementById('hero-jersey-img');
   const jerseyTitle = document.getElementById('hero-jersey-title');
   const jerseyPrice = document.getElementById('hero-jersey-price');
-  const colorNameDisplay = document.getElementById('hero-color-name');
+  const jerseyOriginal = document.getElementById('hero-jersey-original');
   const modelBtns = document.querySelectorAll('.hero-model-btn');
   const colorBtns = document.querySelectorAll('.hero-color-btn');
 
@@ -325,7 +328,7 @@ function initHeroJerseySwitcher() {
 
     if (jerseyTitle) jerseyTitle.textContent = model.name;
     if (jerseyPrice) jerseyPrice.textContent = model.price;
-    if (colorNameDisplay) colorNameDisplay.textContent = `Color: ${color.name}`;
+    if (jerseyOriginal && model.originalPrice) jerseyOriginal.textContent = model.originalPrice;
 
     // Update model buttons
     modelBtns.forEach(btn => {
