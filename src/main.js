@@ -1,11 +1,12 @@
 /**
- * Satria Jersey - Clean Minimalist Interactive Script
- * PT Satria Jersey Indonesia
+ * RFDM Apparel - Clean Minimalist Interactive Script
+ * RFDM Full House Production
  */
 
 document.addEventListener('DOMContentLoaded', () => {
   initMobileMenu();
   initActiveNavSpy();
+  initPortfolioFilter();
   initFaqAccordion();
   initHeroJerseySwitcher();
   initBackToTop();
@@ -16,10 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
    1. Mobile & Offcanvas Sidebar Drawer Navigation
    ------------------------------------------------------------------------- */
 function initMobileMenu() {
-  const toggleBtns = [
-    document.getElementById('mobile-menu-btn'),
-    document.getElementById('desktop-sidebar-btn')
-  ].filter(Boolean);
+  const toggleBtn = document.getElementById('mobile-menu-btn');
   const closeBtn = document.getElementById('mobile-menu-close');
   const mobileMenu = document.getElementById('mobile-menu-drawer');
   const mobileOverlay = document.getElementById('mobile-menu-overlay');
@@ -55,12 +53,12 @@ function initMobileMenu() {
     document.body.style.overflow = '';
   }
 
-  toggleBtns.forEach(btn => {
-    btn.addEventListener('click', (e) => {
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       openMenu();
     });
-  });
+  }
 
   if (closeBtn) closeBtn.addEventListener('click', closeMenu);
   if (mobileOverlay) mobileOverlay.addEventListener('click', closeMenu);
@@ -123,28 +121,67 @@ function initActiveNavSpy() {
     // Update Sidebar Nav Links
     sidebarLinks.forEach(link => {
       const target = link.getAttribute('data-target');
-      const iconWrap = link.querySelector('.w-9.h-9');
       if (target === currentId) {
-        link.classList.add('bg-sky-50', 'border-sky-300', 'text-sky-900', 'font-bold');
-        link.classList.remove('border-transparent', 'text-slate-700');
-        if (iconWrap) {
-          iconWrap.classList.add('bg-sky-500', 'text-white');
-          iconWrap.classList.remove('bg-slate-100', 'text-slate-700');
-        }
+        link.classList.add('bg-sky-50', 'text-sky-700', 'font-bold');
+        link.classList.remove('text-slate-700');
       } else {
-        link.classList.remove('bg-sky-50', 'border-sky-300', 'text-sky-900', 'font-bold');
-        link.classList.add('border-transparent', 'text-slate-700');
-        if (iconWrap) {
-          iconWrap.classList.remove('bg-sky-500', 'text-white');
-          iconWrap.classList.add('bg-slate-100', 'text-slate-700');
-        }
+        link.classList.remove('bg-sky-50', 'text-sky-700', 'font-bold');
+        link.classList.add('text-slate-700');
       }
     });
   });
 }
 
 /* -------------------------------------------------------------------------
-   3. FAQ Accordion
+   3. Portfolio & Catalog Category Filtering
+   ------------------------------------------------------------------------- */
+function initPortfolioFilter() {
+  const filterBtns = document.querySelectorAll('.portfolio-filter-btn');
+  const sidebarCategoryPills = document.querySelectorAll('.sidebar-category-pill');
+  const items = document.querySelectorAll('.portfolio-item');
+
+  function applyFilter(category) {
+    items.forEach(item => {
+      const itemCat = item.getAttribute('data-category');
+      if (category === 'all' || itemCat === category) {
+        item.style.display = '';
+        item.classList.remove('hidden');
+      } else {
+        item.style.display = 'none';
+        item.classList.add('hidden');
+      }
+    });
+
+    filterBtns.forEach(btn => {
+      if (btn.getAttribute('data-filter') === category) {
+        btn.className = 'portfolio-filter-btn px-4 py-1.5 rounded-full bg-slate-900 text-white shadow-sm transition-all';
+      } else {
+        btn.className = 'portfolio-filter-btn px-4 py-1.5 rounded-full bg-white/70 text-slate-600 hover:bg-white transition-all border border-slate-200/80';
+      }
+    });
+  }
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const cat = btn.getAttribute('data-filter');
+      applyFilter(cat);
+    });
+  });
+
+  sidebarCategoryPills.forEach(pill => {
+    pill.addEventListener('click', () => {
+      const cat = pill.getAttribute('data-filter');
+      applyFilter(cat);
+      const productsSection = document.getElementById('products');
+      if (productsSection) {
+        productsSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+}
+
+/* -------------------------------------------------------------------------
+   4. FAQ Accordion
    ------------------------------------------------------------------------- */
 function initFaqAccordion() {
   const faqItems = document.querySelectorAll('.faq-item');
@@ -424,7 +461,7 @@ function initHistoryClearShortcut() {
       toast.id = 'clear-history-toast';
       toast.className = 'fixed top-6 left-1/2 -translate-x-1/2 z-[9999] px-5 py-3 rounded-2xl bg-slate-900/95 backdrop-blur-md text-white text-xs sm:text-sm font-semibold tracking-wide shadow-2xl border border-sky-400/40 flex items-center gap-3 transition-all duration-300 scale-90 opacity-0 pointer-events-none';
       toast.innerHTML = `
-        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping shrink-0"></span>
+        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 shrink-0"></span>
         <div class="flex flex-col">
           <span class="font-bold text-white text-xs sm:text-sm">History & Cache Berhasil Dihapus! (Ctrl + 1)</span>
           <span class="text-[11px] text-slate-300">LocalStorage, Session, Cookies & State web telah direset.</span>
