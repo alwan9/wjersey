@@ -86,6 +86,22 @@ function initActiveNavSpy() {
   const sidebarLinks = document.querySelectorAll('.mobile-nav-link[data-target]');
   const navbar = document.getElementById('main-navbar');
 
+  if (window.location.pathname.includes('katalog')) {
+    window.addEventListener('scroll', () => {
+      const scrollY = window.pageYOffset;
+      if (navbar) {
+        if (scrollY > 30) {
+          navbar.classList.add('shadow-clean-sm', 'bg-white/95');
+          navbar.classList.remove('bg-white/80');
+        } else {
+          navbar.classList.remove('shadow-clean-sm', 'bg-white/95');
+          navbar.classList.add('bg-white/80');
+        }
+      }
+    });
+    return;
+  }
+
   window.addEventListener('scroll', () => {
     const scrollY = window.pageYOffset;
 
