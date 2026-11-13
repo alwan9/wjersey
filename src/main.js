@@ -3,10 +3,13 @@
  * RFDM Full House Production
  */
 
+import productsData from '../products_data.json';
+
 document.addEventListener('DOMContentLoaded', () => {
   initMobileMenu();
   initActiveNavSpy();
   initPortfolioFilter();
+  initPortfolioModal();
   initFaqAccordion();
   initHeroJerseySwitcher();
   initBackToTop();
@@ -177,6 +180,109 @@ function initPortfolioFilter() {
         productsSection.scrollIntoView({ behavior: 'smooth' });
       }
     });
+  });
+}
+
+/* -------------------------------------------------------------------------
+   3b. Portfolio Lightbox Modal
+   ------------------------------------------------------------------------- */
+function initPortfolioModal() {
+  const modal = document.getElementById('portfolio-modal');
+  if (!modal) return;
+
+  const modalClose = document.getElementById('modal-close');
+  const modalImg = document.getElementById('modal-img');
+  const modalCategory = document.getElementById('modal-category');
+  const modalTitle = document.getElementById('modal-title');
+  const modalSubtitle = document.getElementById('modal-subtitle');
+  const modalPrice = document.getElementById('modal-price');
+  const modalPriceDetail = document.getElementById('modal-price-detail');
+  const modalDesc = document.getElementById('modal-desc');
+  const modalOrderBtn = document.getElementById('modal-order-btn');
+  const switchContainer = document.getElementById('modal-switch-container');
+  const btnFront = document.getElementById('modal-btn-front');
+  const btnBack = document.getElementById('modal-btn-back');
+
+  const items = document.querySelectorAll('.portfolio-item');
+
+  let currentProduct = null;
+
+  function openModal(index) {
+    const p = productsData[index];
+    if (!p) return;
+    currentProduct = p;
+
+    modalImg.src = p.img;
+    modalImg.alt = `${p.name} - ${p.subtitle}`;
+    modalCategory.textContent = `${p.subCat} | ${p.categoryLabel}`;
+    modalTitle.textContent = p.name;
+    modalSubtitle.textContent = p.subtitle;
+    modalPrice.textContent = `${p.price}`;
+    modalPriceDetail.textContent = p.priceDetail;
+    modalDesc.textContent = p.desc;
+
+    const waText = encodeURIComponent(`Halo RFDM Apparel, saya tertarik dan ingin memesan produk katalog ${p.name} (${p.categoryLabel})`);
+    modalOrderBtn.href = `https://wa.me/6281213903166?text=${waText}`;
+
+    // Handle 2-sided views
+    if (p.imgBack) {
+      switchContainer.classList.remove('hidden');
+      switchContainer.classList.add('flex');
+      btnFront.className = 'px-2.5 py-1 rounded-full text-[10px] font-bold text-white bg-sky-600 transition-all';
+      btnBack.className = 'px-2.5 py-1 rounded-full text-[10px] font-bold text-slate-300 hover:text-white transition-all';
+    } else {
+      switchContainer.classList.add('hidden');
+      switchContainer.classList.remove('flex');
+    }
+
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    modal.classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+
+  if (btnFront && btnBack) {
+    btnFront.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (!currentProduct) return;
+      modalImg.src = currentProduct.img;
+      btnFront.className = 'px-2.5 py-1 rounded-full text-[10px] font-bold text-white bg-sky-600 transition-all';
+      btnBack.className = 'px-2.5 py-1 rounded-full text-[10px] font-bold text-slate-300 hover:text-white transition-all';
+    });
+
+    btnBack.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (!currentProduct || !currentProduct.imgBack) return;
+      modalImg.src = currentProduct.imgBack;
+      btnBack.className = 'px-2.5 py-1 rounded-full text-[10px] font-bold text-white bg-sky-600 transition-all';
+      btnFront.className = 'px-2.5 py-1 rounded-full text-[10px] font-bold text-slate-300 hover:text-white transition-all';
+    });
+  }
+
+  items.forEach(item => {
+    item.addEventListener('click', () => {
+      const idx = parseInt(item.getAttribute('data-index'), 10);
+      if (!isNaN(idx)) {
+        openModal(idx);
+      }
+    });
+  });
+
+  if (modalClose) modalClose.addEventListener('click', closeModal);
+
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      closeModal();
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+      closeModal();
+    }
   });
 }
 
