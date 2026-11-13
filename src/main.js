@@ -357,14 +357,14 @@ function initHeroJerseySwitcher() {
         {
           id: "white",
           name: "Home (Pearl White & Gold)",
-          img: "./assets/images/hero/voltex-black (2).png",
+          img: "./assets/images/hero/voltex-black (2).webp",
           bgGradient: "from-white via-slate-50 to-amber-200",
           borderCol: "border-amber-400"
         },
         {
           id: "black",
           name: "Away (Obsidian Black & Gold)",
-          img: "./assets/images/hero/voltex-black (1).png",
+          img: "./assets/images/hero/voltex-black (1).webp",
           bgGradient: "from-slate-900 via-slate-800 to-amber-500",
           borderCol: "border-amber-400"
         }
@@ -378,14 +378,14 @@ function initHeroJerseySwitcher() {
         {
           id: "cyan",
           name: "Electric Cyan & Volt Lime",
-          img: "./assets/images/hero/runner-cyan (2).png",
+          img: "./assets/images/hero/runner-cyan (2).webp",
           bgGradient: "from-cyan-400 via-sky-400 to-lime-400",
           borderCol: "border-cyan-400"
         },
         {
           id: "magenta",
           name: "Cosmic Magenta & Violet",
-          img: "./assets/images/hero/runner-cyan (1).png",
+          img: "./assets/images/hero/runner-cyan (1).webp",
           bgGradient: "from-fuchsia-500 via-purple-500 to-violet-600",
           borderCol: "border-fuchsia-400"
         }
@@ -399,14 +399,14 @@ function initHeroJerseySwitcher() {
         {
           id: "crimson",
           name: "Cyber Crimson & Neon Teal",
-          img: "./assets/images/hero/raijin-crimson (1).png",
+          img: "./assets/images/hero/raijin-crimson (1).webp",
           bgGradient: "from-rose-600 via-red-500 to-cyan-400",
           borderCol: "border-rose-400"
         },
         {
           id: "violet",
           name: "Tokyo Neo Violet & Gold",
-          img: "./assets/images/hero/raijin-crimson (2).png",
+          img: "./assets/images/hero/raijin-crimson (2).webp",
           bgGradient: "from-purple-600 via-indigo-600 to-amber-400",
           borderCol: "border-purple-400"
         }
